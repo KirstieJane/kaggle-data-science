@@ -5,11 +5,12 @@
 #  - testing features file (csv format)
 # 
 # Run using
-# > python simple_classifier.py train.csv trainLabels.csv test.csv
+# > python SimpleClassifier.py train.csv trainLabels.csv test.csv
 
 import sys
 import csv
 from sklearn import tree
+from scorer import Scorer
 
 def main(argv):
 
@@ -46,13 +47,21 @@ def main(argv):
 
     # Train a decision tree classifier. Though the default settings
     # aren't very good!
-    clf = tree.DecisionTreeClassifier()
+    clf = tree.DecisionTreeClassifier(min_samples_leaf=50)
     clf.fit(X,y)
     predictions = clf.predict(X_test)
+    train_predictions = clf.predict(X)
 
     # Print out the predictions, 1 per line
     for predict in predictions:
         print predict
+
+
+    # Score results
+    scorer=Scorer(0)
+
+    # Compute classification performance
+    scorer.printAccuracy(train_predictions, y, "Training set performance")
 
     return
 
